@@ -1,19 +1,21 @@
-const mongoose = require('mongoose');
+const Sequelize = require("sequelize");
+const sequelize = require('../db');
 
-const subscriberSchema = new mongoose.Schema({
+const Subscriber = sequelize.define("subscriber", {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
     name: {
-        type: String,
-        required: true
+        type: Sequelize.STRING,
+        allowNull: false
     },
     subscribedChannel: {
-        type: String,
-        requieed: true
-    },
-    subscribeChannel: {
-        type: Date,
-        required: true,
-        default: Date.now
+        type: Sequelize.STRING,
+        allowNull: false
     }
 });
 
-module.exports = mongoose.model('Subscriber', subscriberSchema);
+module.exports = Subscriber;

@@ -1,8 +1,8 @@
 {
-  "name": "rest-api",
+  "name": "rest-api-express-sequelize",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:Randan/rest-api.git",
+  "repository": "git@github.com:Randan/rest-api-express-sequelize.git",
   "author": "Andrew Randan <andrewrandan@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.7.12"
+    "mysql2": "^2.0.1",
+    "sequelize": "^5.21.2"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",

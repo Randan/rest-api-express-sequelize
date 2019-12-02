@@ -1,69 +1,51 @@
 const router = require('express').Router();
 const Subscriber = require('../models/subscriber');
 
-router.get('/', async (req, res) => {
-    try {
-        const subscribers = await Subscriber.find();
-        res.json(subscribers);
-    } catch(err) {
-        res.status(500).json({ message: err.message });
-    }
-});
+router.get('/', (req, res) =>
+    Subscriber.findAll({ raw: true })
+        .then(subscribers => res.json(subscribers))
+        .catch(err => res.status(500).json({ message: err.message }))
+);
 
-router.get('/:id', getSubscriber, (req, res) => {
-    res.json(res.subscriber);
-});
+router.get('/:id', (req, res) =>
+    Subscriber.findAll({
+        where: { id: req.params.id },
+        raw: true
+    })
+        .then(subscribers => res.json(subscribers))
+        .catch(err => res.status(500).json({ message: err.message }))
+);
 
-router.post('/', async (req, res) => {
-    const subscriber = new Subscriber({
+router.post('/', (req, res) => {
+    const newSubscriber = {
         name: req.body.name,
         subscribedChannel: req.body.subscribedChannel
-    });
+    };
 
-    try {
-        const newSubscriber = await subscriber.save();
-        res.status(201).json(newSubscriber);
-    } catch(err) {
-        res.status(400).json({ message: err.message });
-    }
+    Subscriber.create(newSubscriber)
+        .then(() => res.status(201).json(newSubscriber))
+        .catch(err => res.status(400).json({ message: err.message }));
 });
 
-router.patch('/:id', getSubscriber, async (req, res) => {
+router.patch('/:id', (req, res) => {
+    const updatedSubscriber = {};
+
     if (req.body.name != null)
-        res.subscriber.name = req.body.name;
+        updatedSubscriber.name = req.body.name;
 
     if (req.body.subscribedChannel != null)
-        res.subscriber.subscribedChannel = req.body.subscribedChannel;
+        updatedSubscriber.subscribedChannel = req.body.subscribedChannel;
 
-    try {
-        const updatedSubscriber = await res.subscriber.save();
-        res.json(updatedSubscriber);
-    } catch(err) {
-        res.status(400).json({ message: err.message });
-    }
+
+    Subscriber.update(updatedSubscriber, { where: { id: req.params.id } })
+        .then(() => res.json(updatedSubscriber))
+        .catch(err => res.status(400).json({ message: err.message }));
 });
 
-router.delete('/:id', getSubscriber, async (req, res) => {
-    try {
-        await res.subscriber.remove();
-        res.json({ message: 'Deleted This Subscriber' });
-    } catch(err) {
-        res.status(500).json({ message: err.message });
-    }
+router.delete('/:id', (req, res) => {
+    Subscriber.destroy({ where: { id: req.params.id } })
+        .then(() => res.json({ message: 'This Subscrider was deleted' }))
+        .catch(err => res.status(500).json({ message: err.message }));
 });
-
-async function getSubscriber(req, res, next) {
-    try {
-        subscriber = await Subscriber.findById(req.params.id);
-
-        if (subscriber === null)
-            return res.status(404).json({ message: "Can't find subscriber" });
-    } catch(err) {
-        return res.status(500).json({ message: err.message });
-    }
-
-    res.subscriber = subscriber;
-    next();
-}
 
 module.exports = router;
