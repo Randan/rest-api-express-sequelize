@@ -1,23 +1,24 @@
+// controllers should be separated from routers
 const router = require('express').Router();
 const Subscriber = require('../models/subscriber');
 
 router.get('/', (req, res) =>
     Subscriber.findAll({ raw: true })
         .then(subscribers => res.json(subscribers))
-        .catch(err => res.status(500).json({ message: err.message }))
+        .catch(err => res.status(500).json({ message: err.message })) // Create middleware to catch 500 status errors
 );
 
 router.get('/:id', (req, res) =>
-    Subscriber.findAll({
+    Subscriber.findAll({ // we can use findByPk method
         where: { id: req.params.id },
         raw: true
     })
         .then(subscribers => res.json(subscribers))
-        .catch(err => res.status(500).json({ message: err.message }))
+        .catch(err => res.status(500).json({ message: err.message })) // Create middleware to catch 500 status errors
 );
 
 router.post('/', (req, res) => {
-    const newSubscriber = {
+    const newSubscriber = { // we can use destructuring here
         name: req.body.name,
         subscribedChannel: req.body.subscribedChannel
     };
@@ -30,7 +31,7 @@ router.post('/', (req, res) => {
 router.patch('/:id', (req, res) => {
     const updatedSubscriber = {};
 
-    if (req.body.name != null)
+    if (req.body.name != null) // These should be undefined? How does this one work?
         updatedSubscriber.name = req.body.name;
 
     if (req.body.subscribedChannel != null)
@@ -45,7 +46,7 @@ router.patch('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     Subscriber.destroy({ where: { id: req.params.id } })
         .then(() => res.json({ message: 'This Subscrider was deleted' }))
-        .catch(err => res.status(500).json({ message: err.message }));
+        .catch(err => res.status(500).json({ message: err.message })); // Create middleware to catch 500 status errors
 });
 
 module.exports = router;

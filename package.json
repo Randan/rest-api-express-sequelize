@@ -14,7 +14,7 @@
     "sequelize": "^5.21.2"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.2.0", // dotenv should be a normal dependency
     "nodemon": "^2.0.1"
   }
 }
