@@ -8,7 +8,7 @@ const sequelize = new Sequelize(
     {
         dialect: process.env.DATABASE_DIALECT,
         host: process.env.DATABASE_URL,
-        port : process.env.DATABASE_PORT
+        port: process.env.DATABASE_PORT
     }
 );
 
